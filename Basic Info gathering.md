@@ -20,7 +20,7 @@ example: whatweb 10.10.10.121
 
 #### gobuster
 
-example:
+example: 
 
 
 
@@ -66,3 +66,22 @@ IIS	c:\\inetpub\\wwwroot\\
 
 XAMPP	C:\\xampp\\htdocs\\
 
+# Priviledge Escalation
+
+#### Bash/SSH
+A very simple thing to do: sudo -l
+
+An really simple problem I encountered is this. (user2 : user2) NOPASSWD: /bin/bash
+
+For this case, just use "sudo -u user2 /bin/bash". 
+
+In most priviled escalation in CTF. id_rsa file will be "Viewable" by a user. Copy to a file, then connect to the user that own that id_rsa with
+
+ssh root@IP -p port -i KeyFile
+
+#### TCP/IP File Transfering
+python3 -m http.server 8000
+
+scp linenum.sh user@remotehost:/tmp/linenum.sh #Alternative of WinSCP we all known
+
+Don't forget to integrity check with MD5sum
