@@ -1,16 +1,21 @@
 ## Basic Info gathering
 
-#### Whatweb
+### Whatweb
 
 example: whatweb 10.10.10.121
 
 
 
-#### Robots.txt
+### Robots.txt
 
+### Nmap
+Even though this rather simple, don't underestimate
 
+/nmaplowercheck1755574551 /NmapUpperCheck1755574720 Lying in nmap source code,
 
+using: --script-args http.useragent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36" 
 
+This will remove the exposed "Mozilla/5.0 (compatible; Nmap Scripting Engine; https://nmap.org/book/nse.html)" when using normal sSCV scan
 
 
 
@@ -18,13 +23,13 @@ example: whatweb 10.10.10.121
 
 
 
-#### gobuster
+### gobuster
 
 example: 
 
 
 
-#### ffuf
+### ffuf
 
 example: ffuf -u 'http://10.10.10.121/wordpress/FUZZ' -w /home/bbb/CTF/Selects/Discovery/Web-Content/directory-list-lowercase-2.3-big.txt
 
@@ -36,7 +41,7 @@ ffuf -H "Host: FUZZ.editor.htb" -u 'http://editor.htb' -w /home/bbb/CTF/SecLists
 
 # Reverse shell
 
-#### Netcat
+### Netcat
 
 nc -nlvp 1234
 
@@ -50,13 +55,13 @@ nc -nlvp 1234
 
 
 
-#### Upgrade TTY
+### Upgrade TTY
 
 python -c 'import pty; pty.spawn("/bin/bash")'
 
 
 
-#### Default webroot location
+### Default webroot location
 
 Apache	/var/www/html/
 
@@ -68,7 +73,7 @@ XAMPP	C:\\xampp\\htdocs\\
 
 # Priviledge Escalation
 
-#### Bash/SSH
+### Bash/SSH
 A very simple thing to do: sudo -l
 
 An really simple problem I encountered is this. (user2 : user2) NOPASSWD: /bin/bash
@@ -79,9 +84,9 @@ In most priviled escalation in CTF. id_rsa file will be "Viewable" by a user. Co
 
 ssh root@IP -p port -i KeyFile
 
-#### TCP/IP File Transfering
+### TCP/IP File Transfering
 python3 -m http.server 8000
 
 scp linenum.sh user@remotehost:/tmp/linenum.sh #Alternative of WinSCP we all known
 
-Don't forget to integrity check with MD5sum
+Don't forget to integrity check with MD5sum if possible
