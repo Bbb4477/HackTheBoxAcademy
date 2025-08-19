@@ -17,7 +17,36 @@ using: --script-args http.useragent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) A
 
 This will remove the exposed "Mozilla/5.0 (compatible; Nmap Scripting Engine; https://nmap.org/book/nse.html)" when using normal sSCV scan
 
+#### Ip range scan
 
+nmap 10.129.2.0/24 -sn -oA tnet | grep for | cut -d" " -f5
+
+Output sample:
+10.129.2.4
+10.129.2.10
+10.129.2.11
+10.129.2.18
+10.129.2.19
+10.129.2.20
+10.129.2.28
+
+you can push them into a hosts.lst and do this
+
+nmap -sn -oA tnet -iL hosts.lst
+
+-iL : Performs defined scans against targets in provided 'hosts.lst' list.
+
+-oA tnet: Stores the results in all formats starting with the name 'tnet'.
+
+-sn: disable port scanning
+
+To make range scan even more natural, we can use -PE
+
+-PE: Performs the ping scan by using 'ICMP Echo requests' against the target.
+
+-Pn to disable ICMP echo
+
+--disable-arp-ping 
 
 ## Dir travel technique
 
