@@ -84,6 +84,71 @@ All previous technique is TCP scan. Which is a lot more reliable in general. So 
 
 Enable TCP scan: ```-sU```
 
+## SMB
+
+```
+Basic SMB config
+[sharename]	The name of the network share.
+workgroup = WORKGROUP/DOMAIN	Workgroup that will appear when clients query.
+path = /path/here/	        The directory to which user is to be given access.
+server string = STRING	    The string that will show up when a connection is initiated.
+unix password sync = yes	Synchronize the UNIX password with the SMB password?
+usershare allow guests = yes	Allow non-authenticated users to access defined share?
+map to guest = bad user	    What to do when a user login request doesn't match a valid UNIX user?
+browseable = yes	        Should this share be shown in the list of available shares?
+guest ok = yes	            Allow connecting to the service without using a password?
+read only = yes	            Allow users to read files only?
+create mask = 0700	        What permissions need to be set for newly created files?
+```
+
+### SMB client
+
+List shares: ```smbclient -N -L //10.129.14.128 ```
+
+Connect to share after list```smbclient //10.129.14.128/notes```
+
+### RPCclient
+
+Basic login: ```rpcclient -U "" 10.129.14.128```
+
+After login, there are some basic info you can query
+```
+Query	            Description
+srvinfo	            Server information.
+enumdomains	        Enumerate all domains that are deployed in the network.
+querydominfo	    Provides domain, server, and user information of deployed domains.
+netshareenumall	    Enumerates all available shares.
+netsharegetinfo <share>     Provides information about a specific share.
+enumdomusers	    Enumerates all domain users.
+queryuser <RID>	    Provides information about a specific user.
+```
+
+    You can also bruteforcing RIDs to login with a simple payload like this
+
+    for i in $(seq 500 1100);do rpcclient -N -U "" 10.129.14.128 -c "queryuser 0x$(printf '%x\n' $i)" | grep "User Name\|user_rid\|group_rid" && echo "";done
+
+
+
+### Samrdump.py
+
+This is a part of impacket ```samrdump.py 10.129.14.128```
+
+You can access impacket executable location at ```/root/.local/bin```
+
+### SMBmap
+
+```smbmap -H 10.129.14.128```
+
+### CrackMapExec
+
+```crackmapexec smb 10.129.14.128 --shares -u '' -p ''```
+
+### Enum4LinuxNG
+
+Can be consider the best one by useful
+
+```enum4linux 10.129.14.128 -A```
+
 ## Dir travel technique
 
 ### gobuster
