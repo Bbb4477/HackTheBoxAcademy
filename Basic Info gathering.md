@@ -84,6 +84,8 @@ All previous technique is TCP scan. Which is a lot more reliable in general. So 
 
 Enable TCP scan: ```-sU```
 
+# Footprinting
+
 ## SMB
 
 ```
@@ -148,6 +150,20 @@ You can access impacket executable location at ```/root/.local/bin```
 Can be consider the best one by useful
 
 ```enum4linux 10.129.14.128 -A```
+
+## NFS Network File System 
+
+Ultilizing nmap nfs script: ```sudo nmap --script nfs* 10.129.14.128 -sV -p111,2049```
+
+Show available NFS share: ```showmount -e 10.129.14.128```
+
+NFS can't connect like normal, the best way to working around is mouting
+
+    mkdir target-NFS
+    sudo mount -t nfs 10.129.14.128:/ ./target-NFS/ -o nolock
+    cd target-NFS
+
+After done: ```umount target-NFS```
 
 ## Dir travel technique
 
