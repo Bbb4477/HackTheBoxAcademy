@@ -147,6 +147,26 @@ Example: `dig axfr @nsztm1.digi.ninja zonetransfer.me`  @ is at dns server IP or
 
 # Footprinting
 
+## WhatWeb technique
+
+| Tool                       | Description                                                                                                           | Features                                                                                                                                |
+|----------------------------|-----------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------|
+| Wappalyzer                 | Browser extension and online service for website technology profiling.                                                | Identifies a wide range of web technologies, including CMSs, frameworks, analytics tools, and more.                                     |
+| BuiltWith                  | Web technology profiler that provides detailed reports on a website's technology stack.                               | Offers both free and paid plans with varying levels of detail.                                                                          |
+| WhatWeb                    | Command-line tool for website fingerprinting.                                                                         | Uses a vast database of signatures to identify various web technologies.                                                                |
+| Nmap                       | Versatile network scanner that can be used for various reconnaissance tasks, including service and OS fingerprinting. | Can be used with scripts (NSE) to perform more specialised fingerprinting.                                                              |
+| Netcraft                   | Offers a range of web security services, including website fingerprinting and security reporting.                     | Provides detailed reports on a website's technology, hosting provider, and security posture.                                            |
+| wafw00f                    | Command-line tool specifically designed for identifying Web Application Firewalls (WAFs).                             | Helps determine if a WAF is present and, if so, its type and configuration.                                                             |
+
+## Robots.txt rules
+
+| Directive   | Description                                                                                                      | Example                                                    |
+|-------------|------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------|
+| Disallow    | Specifies paths or patterns that the bot should not crawl.                                                       | Disallow: /admin/ (disallow access to the admin directory) |
+| Allow       | Explicitly permits the bot to crawl specific paths or patterns, even if they fall under a broader Disallow rule. | Allow: /public/ (allow access to the public directory)     |
+| Crawl-delay | Sets a delay (in seconds) between successive requests from the bot to avoid overloading the server.              | Crawl-delay: 10 (10-second delay between requests)         |
+| Sitemap     | Provides the URL to an XML sitemap for more efficient crawling.                                                  | Sitemap: https://www.example.com/sitemap.xml               |
+
 ## SMB
 
 ```
@@ -234,6 +254,8 @@ After done: ```umount target-NFS```
 
 example: ```gobuster dir -u https://example.com -w /wordlists/Discovery/Web-Content/big.txt -t 4 ```
 
+Gobuster is especially good for subdomain fuzz in local DNS system `gobuster vhost -u http://inlanefreight.htb:52295 -w /home/bbb/SecLists/Discovery/DNS/subdomains-top1million-110000.txt --append-domain`
+
 ### ffuf
 
 Normal fuzz:
@@ -259,6 +281,8 @@ Subdomain fuzz:
 -p 	port? maybe
 ```
 
+`nc -nv 10.129.41.200 7777`: Establish a connect to target port, opposite way from listening. This is not recommended way since system mostly have strict income firewall, so ultilizing outcoming network is better way.
+
 
 
 ### Upgrade TTY
@@ -273,6 +297,9 @@ Nginx	/usr/local/nginx/html/
 IIS	    c:\\inetpub\\wwwroot\\
 XAMPP	C:\\xampp\\htdocs\\
 ```
+
+### Some useful command
+`env`: This will extract a bunch of environment variable current system have, something like that. Don't require root to do so
 
 # Priviledge Escalation
 
